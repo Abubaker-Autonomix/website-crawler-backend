@@ -129,7 +129,12 @@ def save_page(job_id: str, url: str, status_code: int, clean_text: str) -> str:
 def list_pages(job_id: str):
     with get_conn() as conn:
         rows = conn.execute("SELECT * FROM pages WHERE job_id = ?", (job_id,)).fetchall()
-        return [dict(r) for r in rows]
+        pages = []
+        for r in rows:
+            d = dict(r)
+            d["preview"] = (d.get("clean_text") or "")[:300]
+            pages.append(d)
+        return pages
 
 
 # ---------- Chunks ----------
@@ -151,4 +156,9 @@ def list_chunks(job_id: str, limit: int = 200, offset: int = 0):
             "SELECT * FROM chunks WHERE job_id = ? LIMIT ? OFFSET ?",
             (job_id, limit, offset),
         ).fetchall()
-        return [dict(r) for r in rows]
+        chunks = []
+        for r in rows:
+            d = dict(r)
+            d["index"] = d.get("chunk_index")
+            chunks.append(d)
+        return chunks
