@@ -103,13 +103,22 @@ def update_job_status(job_id: str, status: str, error: str = None):
 def get_job(job_id: str):
     with get_conn() as conn:
         row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
-        return dict(row) if row else None
+        if not row:
+            return None
+        d = dict(row)
+        d["job_id"] = d.get("id")
+        return d
 
 
 def list_jobs():
     with get_conn() as conn:
         rows = conn.execute("SELECT * FROM jobs ORDER BY created_at DESC").fetchall()
-        return [dict(r) for r in rows]
+        jobs = []
+        for r in rows:
+            d = dict(r)
+            d["job_id"] = d.get("id")
+            jobs.append(d)
+        return jobs
 
 
 # ---------- Pages ----------
