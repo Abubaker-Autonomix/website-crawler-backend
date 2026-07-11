@@ -160,5 +160,10 @@ def list_chunks(job_id: str, limit: int = 200, offset: int = 0):
         for r in rows:
             d = dict(r)
             d["index"] = d.get("chunk_index")
+            try:
+                meta = json.loads(d.get("metadata") or "{}")
+            except (json.JSONDecodeError, TypeError):
+                meta = {}
+            d["source_url"] = meta.get("source_url")
             chunks.append(d)
         return chunks
