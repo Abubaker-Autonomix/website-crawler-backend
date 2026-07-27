@@ -66,3 +66,7 @@ curl http://localhost:8000/api/jobs/<job_id>/chunks
 2. Use `ngrok http 8000` to get a temporary public URL
 3. Point your Lovable frontend's API calls at that URL
 4. Once everything works end-to-end, deploy to Render (free tier) for a permanent URL
+
+
+## Live Demo
+🔗 https://website-crawler-backend-production.up.railway.app/
